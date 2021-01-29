@@ -1,0 +1,49 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Volo.Abp.AuditLogging.EntityFrameworkCore;
+using Volo.Abp.BackgroundJobs.EntityFrameworkCore;
+using Volo.Abp.EntityFrameworkCore;
+using Volo.Abp.FeatureManagement.EntityFrameworkCore;
+using Volo.Abp.Identity;
+using Volo.Abp.Identity.EntityFrameworkCore;
+using Volo.Abp.IdentityServer.EntityFrameworkCore;
+using Volo.Abp.PermissionManagement.EntityFrameworkCore;
+using Volo.Abp.SettingManagement.EntityFrameworkCore;
+using Volo.Abp.TenantManagement.EntityFrameworkCore;
+
+namespace Acme.BookStore.EntityFrameworkCore
+{
+    /* This DbContext is only used for database migrations.
+     * It is not used on runtime. See BookStoreDbContext for the runtime DbContext.
+     * It is a unified model that includes configuration for
+     * all used modules and your application.
+     */
+
+    public class BookStoreMigrationsDbContext : AbpDbContext<BookStoreMigrationsDbContext>
+    {
+        public BookStoreMigrationsDbContext(DbContextOptions<BookStoreMigrationsDbContext> options)
+            : base(options)
+        {
+        }
+
+        [System.Obsolete]
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            /* Include modules to your migration db context */
+
+            modelBuilder.ConfigurePermissionManagement();
+            modelBuilder.ConfigureSettingManagement();
+            modelBuilder.ConfigureBackgroundJobs();
+            modelBuilder.ConfigureAuditLogging();
+            modelBuilder.ConfigureIdentity();
+            modelBuilder.ConfigureIdentityServer();
+            modelBuilder.ConfigureFeatureManagement();
+            modelBuilder.ConfigureTenantManagement();
+
+            /* Configure your own tables/entities inside the ConfigureBookStore method */
+
+            modelBuilder.ConfigureBookStore();
+        }
+    }
+}
